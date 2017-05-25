@@ -23,16 +23,16 @@ export const mockMethod = (
       new AWS.ParamValidator(true).validate(apiOperation.input, params)
     }
     const requestResultPromisify = async () => requestStub(params, ...otherArgs)
-    const promise = requestResultPromisify()
+    const resultPromise = requestResultPromisify()
     const callback = typeof last(otherArgs) === 'function' ? last(otherArgs) : null
     if (callback) {
-      promise.then(
+      resultPromise.then(
         result => callback(null, result),
         error => callback(error),
       )
     }
     return {
-      promise,
+      promise: () => resultPromise,
     }
   })
   func.request = requestStub
