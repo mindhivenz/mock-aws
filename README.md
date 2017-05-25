@@ -25,7 +25,7 @@ import { mockService } from '@mindhive/mock-aws'
 const s3 = mockService(S3, ['getObject', 'putObject'])
 s3.getObject.request.withArgs(sinon.match({ Key: expectedKey }))
   .returnsValue({ Body: image })
-
+const result = await s3.getObject(params).promise()
 s3.getObject.should.have.been.calledOnce
 ```
 
