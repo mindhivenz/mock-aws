@@ -1,5 +1,5 @@
 import DynamoDb from 'aws-sdk/clients/dynamodb'
-import { port } from './dynamodb-const'
+import { port } from './dynamodbConst'
 
 
 export default new DynamoDb({

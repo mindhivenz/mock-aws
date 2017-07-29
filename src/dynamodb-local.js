@@ -2,7 +2,7 @@
 
 import net from 'net'
 import dynamodbLocal from 'dynamodb-localhost'
-import { port } from './dynamodb-const'
+import { port } from './dynamodbConst'
 
 /* eslint-disable no-console */
 
