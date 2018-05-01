@@ -32,10 +32,11 @@
   },
   "devDependencies": {
     "babel-cli": "^6.18.0",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-plugin-transform-runtime": "^6.15.0",
     "babel-preset-env": "^1.2.1",
-    "eslint": "^3.13.1",
-    "eslint-config-mindhive": "^1.1.0"
+    "eslint": "^4.19.1",
+    "eslint-config-mindhive": "^2.0.1"
   },
   "peerDependencies": {
     "aws-sdk": "^2.7.25",
