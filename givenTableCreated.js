@@ -1,2 +1,2 @@
 
-module.exports = require('./dist/givenTableCreatedFromCfn')
+module.exports = require('./dist/givenTableCreated')

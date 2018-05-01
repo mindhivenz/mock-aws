@@ -9,10 +9,10 @@ export default async (tableProperties) => {
   try {
     try {
       await dynamodbDriver.deleteTable(tableNameProp).promise()
-      await dynamodbDriver.waitFor('tableNotExists', tableNameProp).promise()
     } catch (ignore) {
       // ignore
     }
+    await dynamodbDriver.waitFor('tableNotExists', tableNameProp).promise()
     const props = { ...tableProperties }
     if (props.StreamSpecification && ! ('StreamEnabled' in props.StreamSpecification)) {  // This is needed by the SDK, but not in CloudFormation
       props.StreamSpecification.StreamEnabled = true

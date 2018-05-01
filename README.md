@@ -1,6 +1,6 @@
 # Mock AWS
 
-## Mocking AWS API calls
+## Mocking AWS API calls using Sinon
 
 Use either `mockService` to mock an entire service, or `mockMethod`
  to mock just a single method. Both take the AWS service class
