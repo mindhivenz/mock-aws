@@ -15,7 +15,7 @@ The resulting methods are `sinon.spy`s. You can use them in the
  pause on the method call then use a `Promise` as the return value
  and resolve it later.
 
-The methods will also validate the passed parameters against the
+The methods will validate the passed parameters against the
  'schema' AWS has catching errors early.
 
 ```js
@@ -23,35 +23,52 @@ import S3 from 'aws-sdk/clients/s3'
 import { mockService } from '@mindhive/mock-aws'
 
 const s3 = mockService(S3, ['getObject', 'putObject'])
+const image = some.image()
 s3.getObject.request.withArgs(sinon.match({ Key: expectedKey }))
   .returnsValue({ Body: image })
 const result = await s3.getObject(params).promise()
 s3.getObject.should.have.been.calledOnce
+result.Body.should.equal(image)
 ```
 
 ## Testing against DynamoDB
 
-This package installs a `bin` script `dynamodb-local` to start a
-local DynamoDB. The first time this will download and install the
-AWS local DynamoDB under:
-`/node_modules/dynamodb-localhost/dynamodb/bin`.
+This package installs a `bin` script `dynamodb-local-install` which
+will download AWS's [DynamoDB Local](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DynamoDBLocal.html)
+(it's stored within `node_modules`).
+Then you can start a copy of the local server and get a DynamoDB
+client pointing to that server with `dynamodbClientInstance`.
+The instance is created on a free port so you can run tests in
+parallell across multiple instances of Node.
 
-`givenTableCreated` will delete any existing table and re-create
-it so it's empty and ready for the test setup.
+`givenTableCreated` will ensure the table is setup as per the given
+properties and empty.
+As `createTable` and `deleteTable` can be slow with
+the local server it will empty the table in a batch operation if the
+table properties have not changed.
 
-Then in your test code:
+Example:
 ```js
-import dynamodbDriver from '@mindhive/mock-aws/dynamodb-driver'
+import dynamodbDriver from '@mindhive/mock-aws/dynamodbClientInstance'
 import givenTableCreated from '@mindhive/mock-aws/givenTableCreated'
 import DynamoDb from 'aws-sdk/clients/dynamodb'
 
-await givenTableCreated({
-  TableName: 'Users',
-  ...  // As per DynamoDB.createTable in the AWS SDK
+let dynamodb
+before(async () => {  // This can be put in a separate module imported by all tests
+  dynamodb = await dynamodbClientInstance()
 })
 
-const docClient = new DynamoDb.DocumentClient({ service: dynamodbDriver })
-docClient.put({...})
+describe('suite', () => {
+  it('should work with DynamoDB table', async () => {
+    await givenTableCreated({
+      TableName: 'foo',
+      ...  // As per DynamoDB.createTable in the AWS SDK
+    })
+    const docClient = new DynamoDb.DocumentClient({ service: dynamodbDriver })
+    await docClient.put({...}).promise()
+    ...
+  })
+})
 ```
 
 ### Table definition from CloudFormation template
@@ -69,3 +86,10 @@ await givenTableCreated(template.Resources['FooTable'].Properties)
 
 This will also handle some of the differences between `AWS::DynamoDB::Table`
 `Properties` and the properties required by the SDK to create a table.
+
+### Single DynamoDB Local instance
+
+Alternatively you can call the bin script `dynamodb-local` which downloads
+the server (if not downloaded already) and starts the local server on
+the (fixed) standard port. `dynamodbClientInstance` will look on that
+port first and use it if it exists.

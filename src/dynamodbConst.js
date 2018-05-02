@@ -1,3 +1,3 @@
 
 
-export const port = 8356
+export const SINGLE_INSTANCE_PORT = 8356

@@ -1,38 +1,19 @@
 #!/usr/bin/env node
 
-import net from 'net'
 import dynamodbLocal from 'dynamodb-localhost'
-import { port } from './dynamodbConst'
+import { SINGLE_INSTANCE_PORT } from './dynamodbConst'
+import { checkPortInUse } from './ports'
+import startDynamodbLocal from './startDynamodbLocal'
 
 /* eslint-disable no-console */
 
-const stopDynamodbLocal = () => {
-  dynamodbLocal.stop(port)
-}
-
-const checkPortInUse = (callback) => {
-  const server = net.createServer()
-  server.listen(port, '0.0.0.0')
-  server.on('error', (e) => {
-    callback(e.code === 'EADDRINUSE' ? true : null)
-  })
-  server.on('listening', () => {
-    server.close()
-    callback(false)
-  })
-}
-
-checkPortInUse((inUse) => {
-  if (inUse) {
-    console.log('Dynamodb local already started, will use existing')
-  } else {
-    dynamodbLocal.install(() => {
-      dynamodbLocal.start({
-        port,
-        delayTransientStatuses: false,
+checkPortInUse(SINGLE_INSTANCE_PORT)
+  .then((existingInstance) => {
+    if (existingInstance) {
+      console.log(`Dynamodb local already started on port ${SINGLE_INSTANCE_PORT}, will use existing`)
+    } else {
+      dynamodbLocal.install(() => {
+        startDynamodbLocal(SINGLE_INSTANCE_PORT)
       })
-    })
-  }
-})
-
-process.on('SIGINT', stopDynamodbLocal)
+    }
+  })

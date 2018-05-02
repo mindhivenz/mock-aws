@@ -11,7 +11,8 @@
     }
   ],
   "bin": {
-    "dynamodb-local": "./dist/dynamodb-local.js"
+    "dynamodb-local": "./dist/dynamodb-local.js",
+    "dynamodb-local-install": "./dist/dynamodb-local-install.js"
   },
   "scripts": {
     "lint": "eslint --ext .jsx,.js src",
