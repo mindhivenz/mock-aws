@@ -34,8 +34,9 @@ result.Body.should.equal(image)
 ## Testing against DynamoDB
 
 This package installs a `bin` script `dynamodb-local-install` which
-will download AWS's [DynamoDB Local](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DynamoDBLocal.html)
-(it's stored within `node_modules`).
+will download AWS's [DynamoDB Local](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DynamoDBLocal.html).
+This is stored within `node_modules` so you will need to reinstall
+should the package be updated.
 Then you can start a copy of the local server and get a DynamoDB
 client pointing to that server with `dynamodbClientInstance`.
 The instance is created on a free port so you can run tests in
