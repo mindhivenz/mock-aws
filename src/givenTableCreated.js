@@ -32,7 +32,12 @@ export default async (tableProperties) => {
         ProjectionExpression: Object.keys(expressionAttributeNames).join(', '),
       }
       let scanRequest = await client.scan(scanParams)
+      let scanResponse = null
+      const captureResponse = (response) => {
+        scanResponse = response
+      }
       do {
+        scanRequest.on('success', captureResponse)
         const scan = await scanRequest.promise()
         if (! scan.Items.length) {
           return
@@ -44,7 +49,7 @@ export default async (tableProperties) => {
             }))
           }
         }).promise()
-        scanRequest = scan.nextPage()
+        scanRequest = scanResponse.nextPage()
       } while (scanRequest)
     } else {
       console.log('Reverting to delete as table properties have changed')
