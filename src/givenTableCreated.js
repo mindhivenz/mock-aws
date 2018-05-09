@@ -31,8 +31,9 @@ export default async (tableProperties) => {
         ExpressionAttributeNames: expressionAttributeNames,
         ProjectionExpression: Object.keys(expressionAttributeNames).join(', '),
       }
-      while (true) {
-        const scan = await client.scan(scanParams).promise()
+      let scanRequest = await client.scan(scanParams)
+      do {
+        const scan = await scanRequest.promise()
         if (! scan.Items.length) {
           return
         }
@@ -43,12 +44,8 @@ export default async (tableProperties) => {
             }))
           }
         }).promise()
-        if (scan.LastEvaluatedKey) {
-          scanParams.ExclusiveStartKey = scan.LastEvaluatedKey
-        } else {
-          return
-        }
-      }
+        scanRequest = scan.nextPage()
+      } while (scanRequest)
     } else {
       console.log('Reverting to delete as table properties have changed')
       // Have to delete, this can be slow with DynamoDB local
@@ -61,5 +58,4 @@ export default async (tableProperties) => {
     }
     await client.createTable(createProps).promise()
   }
-  // console.error(`Table "${tableProperties.TableName}" in instance port ${port} create failed`, e)
 }
