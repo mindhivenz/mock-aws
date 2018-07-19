@@ -40,7 +40,9 @@ should the package be updated.
 Then you can start a copy of the local server and get a DynamoDB
 client pointing to that server with `dynamodbClientInstance`.
 The instance is created on a free port so you can run tests in
-parallell across multiple instances of Node.
+parallel across multiple instances of Node.
+
+Note: the local server requires Java to be installed.
 
 `givenTableCreated` will ensure the table is setup as per the given
 properties and empty.
