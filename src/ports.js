@@ -1,20 +1,20 @@
 import net from 'net'
 
 
-export const checkPortInUse = port => new Promise((resolve, reject) => {
-  const server = net.createServer()
-    .once('error', (e) => {
-      if (e.code === 'EADDRINUSE') {
-        resolve(true)
-      } else {
-        reject(e)
-      }
-    })
-    .once('listening', () => {
-      server.close()
+export const checkPortInUse = port => new Promise((resolve) => {
+  const socket = net.createConnection({ port, timeout: 1000 })
+    .once('timeout', () => {
+      socket.end()
       resolve(false)
     })
-    .listen(port, '0.0.0.0')
+    .once('error', () => {
+      socket.end()
+      resolve(false)
+    })
+    .once('connect', () => {
+      socket.end()
+      resolve(true)
+    })
 })
 
 export const freePort = () => new Promise((resolve, reject) => {

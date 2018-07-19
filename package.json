@@ -29,7 +29,8 @@
     "babel-runtime": "^6.18.0",
     "dynamodb-localhost": "^0.0.5",
     "js-yaml": "^3.9.0",
-    "lodash": "^4.17.4"
+    "lodash": "^4.17.4",
+    "sleep-promise": "^8.0.1"
   },
   "devDependencies": {
     "babel-cli": "^6.18.0",
