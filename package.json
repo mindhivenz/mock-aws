@@ -1,6 +1,6 @@
 {
   "name": "@mindhive/mock-aws",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "private": false,
   "description": "Mocking of the aws-sdk",
   "main": "dist/index.js",
