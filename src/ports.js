@@ -2,7 +2,7 @@ import net from 'net'
 
 
 export const checkPortInUse = port => new Promise((resolve) => {
-  const socket = net.createConnection({ port, timeout: 1000 })
+  const socket = net.createConnection({ host: '127.0.0.1', port, timeout: 500 })
     .once('timeout', () => {
       socket.end()
       resolve(false)
