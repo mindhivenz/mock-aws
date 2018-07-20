@@ -52,12 +52,13 @@ table properties have not changed.
 
 Example:
 ```js
-import dynamodbDriver from '@mindhive/mock-aws/dynamodbClientInstance'
+import dynamodbClientInstance from '@mindhive/mock-aws/dynamodbClientInstance'
 import givenTableCreated from '@mindhive/mock-aws/givenTableCreated'
 import DynamoDb from 'aws-sdk/clients/dynamodb'
 
 let dynamodb
 before(async () => {  // This can be put in a separate module imported by all tests
+  // Ensure local server is started before the test runs
   dynamodb = await dynamodbClientInstance()
 })
 
@@ -67,7 +68,7 @@ describe('suite', () => {
       TableName: 'foo',
       ...  // As per DynamoDB.createTable in the AWS SDK
     })
-    const docClient = new DynamoDb.DocumentClient({ service: dynamodbDriver })
+    const docClient = new DynamoDb.DocumentClient({ service: dynamodb })
     await docClient.put({...}).promise()
     ...
   })

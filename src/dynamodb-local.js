@@ -2,12 +2,12 @@
 
 import dynamodbLocal from 'dynamodb-localhost'
 import { SINGLE_INSTANCE_PORT } from './dynamodbConst'
-import { checkPortInUse } from './ports'
+import { serverExists } from './dynamodbConnection'
 import startDynamodbLocal from './startDynamodbLocal'
 
 /* eslint-disable no-console */
 
-checkPortInUse(SINGLE_INSTANCE_PORT)
+serverExists(SINGLE_INSTANCE_PORT)
   .then((existingInstance) => {
     if (existingInstance) {
       console.log(`Dynamodb local already started on port ${SINGLE_INSTANCE_PORT}, will use existing`)
