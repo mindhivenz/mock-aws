@@ -2,12 +2,10 @@ import net from 'net'
 import DynamoDb from 'aws-sdk/clients/dynamodb'
 import { Credentials } from 'aws-sdk/global'
 
-const IPV4_LOCALHOST = '127.0.0.1'  // Has to be IPv4
-
 export const clientFactory = (port, options = {}) =>
   new DynamoDb({
     region: 'localhost',
-    endpoint: `http://${IPV4_LOCALHOST}:${port}`,
+    endpoint: `http://localhost:${port}`,
     credentials: new Credentials('dummyKey', 'dummySecret'),
     ...options,
   })
