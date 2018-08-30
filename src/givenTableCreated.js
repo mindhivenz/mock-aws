@@ -57,7 +57,7 @@ export default async (tableProperties) => {
       await client.deleteTable(tableNameProp).promise()
     }
   } else {
-    const createProps = { ...tableProperties }
+    const { PointInTimeRecoverySpecification: ignore, ...createProps } = tableProperties
     if (createProps.StreamSpecification && ! ('StreamEnabled' in createProps.StreamSpecification)) {  // This is needed by the SDK, but not in CloudFormation
       createProps.StreamSpecification.StreamEnabled = true
     }
